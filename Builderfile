@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/java/maven:11-zulu-debian10 as builder
+
+RUN mkdir /codebase
+COPY . /codebase/
+
+WORKDIR /codebase
+RUN mvn compile
+
+FROM payara/micro:latest
+
+COPY --from=builder /codebase/target/javaee8-service.war /opt/payara/deployments/
